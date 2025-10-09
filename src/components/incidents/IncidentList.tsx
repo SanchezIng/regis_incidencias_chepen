@@ -185,7 +185,7 @@ export function IncidentList({ onSelectIncident }: IncidentListProps) {
                     minute: '2-digit',
                   })}</span>
                 </div>
-                {profile?.role === 'authority' && (
+                {profile?.role === 'authority' && incident.profiles && (
                   <div className="text-xs">
                     Reportado por: {incident.profiles.full_name}
                   </div>

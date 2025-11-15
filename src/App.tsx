@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { AuthLayout } from './components/layout/AuthLayout';
 import { Header } from './components/layout/Header';
 import { LoginForm } from './components/auth/LoginForm';
 import { RegisterForm } from './components/auth/RegisterForm';
 import { ForgotPasswordForm } from './components/auth/ForgotPasswordForm';
+import { ResetPasswordForm } from './components/auth/ResetPasswordForm';
 import { IncidentForm } from './components/incidents/IncidentForm';
 import { IncidentList } from './components/incidents/IncidentList';
 import { AuthorityDashboard } from './components/dashboard/AuthorityDashboard';
@@ -17,7 +18,19 @@ type Incident = Database['public']['Tables']['incidents']['Row'] & {
 };
 
 function AuthPages() {
-  const [authMode, setAuthMode] = useState<'login' | 'register' | 'forgot'>('login');
+  const [authMode, setAuthMode] = useState<'login' | 'register' | 'forgot' | 'reset'>('login');
+
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash.includes('type=recovery')) {
+      setAuthMode('reset');
+    }
+  }, []);
+
+  const handleResetSuccess = () => {
+    setAuthMode('login');
+    window.location.hash = '';
+  };
 
   return (
     <AuthLayout>
@@ -32,6 +45,9 @@ function AuthPages() {
       )}
       {authMode === 'forgot' && (
         <ForgotPasswordForm onBack={() => setAuthMode('login')} />
+      )}
+      {authMode === 'reset' && (
+        <ResetPasswordForm onSuccess={handleResetSuccess} />
       )}
     </AuthLayout>
   );

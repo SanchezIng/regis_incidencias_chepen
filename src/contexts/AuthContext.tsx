@@ -57,7 +57,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .from('profiles')
         .select('*')
         .eq('id', userId)
-        .eq('is_deleted', false)
         .maybeSingle();
 
       if (error) throw error;
